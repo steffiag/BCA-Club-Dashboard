@@ -46,7 +46,7 @@ function App() {
   return (
     <div className="container">
       <h1 className="hello-world">Hello World!</h1>
-      <h2 className="title">- Welcome to BCACD's Plumbing Project - </h2>
+      <h2 className="title">Welcome to BCACD's Plumbing Project </h2>
 
       {/* Add Club Form */}
       <form className="form-card" onSubmit={handleAddUser}>

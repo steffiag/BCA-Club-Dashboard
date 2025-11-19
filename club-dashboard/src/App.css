@@ -1,15 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* Import Poppins font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Container & Fonts */
+/* Center everything vertically and horizontally */
+body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f6fa; /* soft, eye-friendly background */
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Main container */
 .container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 25px;
-  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  width: 90%;
+  max-width: 600px;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
   text-align: center;
-  background: #f5f6fa;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* Hello World Header */
@@ -17,21 +28,19 @@
   font-size: 2rem;
   color: #2f3640;
   margin-bottom: 5px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-/* Main Dashboard Title */
+/* Dashboard Title */
 .title {
   font-size: 1.7rem;
   margin-bottom: 25px;
-  font-family: 'Poppins', sans-serif;
   color: #636e72;
 }
 
 /* Form Card */
 .form-card {
-  background: #ffffff;
+  background: #f0f2f5;
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -40,15 +49,15 @@
 }
 
 .form-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
+/* Input Fields */
 .input {
   width: 80%;
   padding: 12px;
   margin: 10px 0;
   border-radius: 8px;
-  font-family: 'Poppins', sans-serif;
   border: 1px solid #dcdde1;
   font-size: 1rem;
   outline: none;
@@ -91,11 +100,12 @@
   padding: 0;
 }
 
+/* Individual Club Card */
 .club-card {
   background: #ffffff;
   margin: 12px 0;
   padding: 15px 20px;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -108,18 +118,22 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
+/* Club info with spacing between name and email */
 .club-info {
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* space between name and email */
 }
 
 .club-name {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #2f3640;
 }
 
 .club-email {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #718093;
 }
 
