@@ -1,18 +1,18 @@
-/* Import Poppins font */
+/* poppins font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Center everything vertically and horizontally */
+
 body, html {
   height: 100%;
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f5f6fa; /* soft, eye-friendly background */
+  background: #f5f6fa; 
   font-family: 'Poppins', sans-serif;
 }
 
-/* Main container */
+/* main container */
 .container {
   width: 90%;
   max-width: 600px;
@@ -23,7 +23,7 @@ body, html {
   text-align: center;
 }
 
-/* Hello World Header */
+/* hello world header */
 .hello-world {
   font-size: 2rem;
   color: #2f3640;
@@ -31,14 +31,14 @@ body, html {
   font-weight: 700;
 }
 
-/* Dashboard Title */
+/* dashboard title */
 .title {
   font-size: 1.7rem;
   margin-bottom: 25px;
   color: #636e72;
 }
 
-/* Form Card */
+/* form card */
 .form-card {
   background: #f0f2f5;
   padding: 25px;
@@ -52,7 +52,7 @@ body, html {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-/* Input Fields */
+/* input fields */
 .input {
   width: 80%;
   padding: 12px;
@@ -69,7 +69,7 @@ body, html {
   box-shadow: 0 0 6px rgba(72, 126, 176, 0.2);
 }
 
-/* Add Button */
+/* add button */
 .btn-add {
   margin-top: 10px;
   background: #487eb0;
@@ -87,20 +87,20 @@ body, html {
   transform: scale(1.03);
 }
 
-/* Section Header */
+/* section header */
 .section-title {
   font-size: 1.5rem;
   color: #2f3640;
   margin-bottom: 15px;
 }
 
-/* Club List & Cards */
+/* club list & cards */
 .club-list {
   list-style: none;
   padding: 0;
 }
 
-/* Individual Club Card */
+/* individual club card */
 .club-card {
   background: #ffffff;
   margin: 12px 0;
@@ -118,7 +118,7 @@ body, html {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* Club info with spacing between name and email */
+/* club info with spacing between name and email */
 .club-info {
   text-align: left;
   display: flex;
