@@ -1,73 +1,98 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   const [users, setUsers] = useState([]);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 
-  // READ: Fetch all users
+  // READ: Fetch all clubs
   const fetchUsers = () => {
     fetch("http://localhost:4000/users")
-      .then(res => res.json())
-      .then(data => setUsers(data));
+      .then((res) => res.json())
+      .then((data) => setUsers(data));
   };
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  // WRITE: Add a new user
+  // WRITE: Add new club
   const handleAddUser = (e) => {
     e.preventDefault();
 
     fetch("http://localhost:4000/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email })
+      body: JSON.stringify({ username, email }),
     })
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(() => {
         setUsername("");
         setEmail("");
-        fetchUsers(); // refresh the list
+        fetchUsers();
       });
   };
 
-  return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>Clubs in BCA </h1>
+  // DELETE: Remove club
+  const handleDelete = (id) => {
+    fetch(`http://localhost:4000/users/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then(() => fetchUsers());
+  };
 
-      {/* WRITE: Add User Form */}
-      <form onSubmit={handleAddUser} style={{ marginBottom: "20px" }}>
-        <h3>Add New Club</h3>
+  return (
+    <div className="container">
+      <h1 className="hello-world">Hello World!</h1>
+      <h2 className="title">- Welcome to BCACD's Plumbing Project - </h2>
+
+      {/* Add Club Form */}
+      <form className="form-card" onSubmit={handleAddUser}>
+        <h3>Add a New Club</h3>
+
         <input
+          className="input"
           type="text"
           placeholder="Club Name"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
         />
-        <br /><br />
+
         <input
+          className="input"
           type="email"
-          placeholder="Club Leader's Email"
+          placeholder="Club Leader Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <br /><br />
-        <button type="submit">Add User</button>
+
+        <button className="btn-add" type="submit">
+          + Add Club
+        </button>
       </form>
 
-      {/* READ: Display Users */}
-      <h3>All BCA Clubs</h3>
-      <ul>
+      {/* Display Clubs */}
+      <h3 className="section-title">All BCA Clubs</h3>
+
+      <ul className="club-list">
         {users.map((u) => (
-          <li key={u.id}>{u.username} — {u.email}</li>
+          <li key={u.id} className="club-card">
+            <div className="club-info">
+              <span className="club-name">{u.username}</span>
+              <span className="club-email">{u.email}</span>
+            </div>
+            <button className="btn-delete" onClick={() => handleDelete(u.id)}>
+              ✖
+            </button> 
+          </li>
         ))}
       </ul>
     </div>
-  );
+  ); 
 }
 
 export default App;
