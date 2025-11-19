@@ -1,35 +1,73 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [users, setUsers] = useState([]);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
+  // READ: Fetch all users
+  const fetchUsers = () => {
+    fetch("http://localhost:4000/users")
+      .then(res => res.json())
+      .then(data => setUsers(data));
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  // WRITE: Add a new user
+  const handleAddUser = (e) => {
+    e.preventDefault();
+
+    fetch("http://localhost:4000/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email })
+    })
+      .then(res => res.json())
+      .then(() => {
+        setUsername("");
+        setEmail("");
+        fetchUsers(); // refresh the list
+      });
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h1>Clubs in BCA </h1>
+
+      {/* WRITE: Add User Form */}
+      <form onSubmit={handleAddUser} style={{ marginBottom: "20px" }}>
+        <h3>Add New Club</h3>
+        <input
+          type="text"
+          placeholder="Club Name"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <br /><br />
+        <input
+          type="email"
+          placeholder="Club Leader's Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <br /><br />
+        <button type="submit">Add User</button>
+      </form>
+
+      {/* READ: Display Users */}
+      <h3>All BCA Clubs</h3>
+      <ul>
+        {users.map((u) => (
+          <li key={u.id}>{u.username} — {u.email}</li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-export default App
+export default App;
