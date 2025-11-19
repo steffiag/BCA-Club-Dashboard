@@ -1,9 +1,9 @@
-// --- Imports ---
+// imports
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 
-// --- App Setup ---
+// app setup
 const app = express();
 app.use(cors());
 app.use(express.json()); // allows JSON body parsing
@@ -11,12 +11,12 @@ app.use(express.json()); // allows JSON body parsing
 // --- MySQL Connection ---
 const db = mysql.createConnection({
   host: "localhost",
-  user: "appuser",          // ← replace with your MySQL username
-  password: "password123",  // ← replace with your MySQL password
-  database: "my_app"        // ← replace with your schema/database name
+  user: "appuser",          // ← MySQL username
+  password: "password123",  // ←  MySQL password (for this type of user - "appuser")
+  database: "my_app"        // ←  schema/database name 
 });
 
-// Test MySQL connection
+// testing MySQL connection
 db.connect((err) => {
   if (err) {
     console.error("MySQL connection error:", err);
@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
-// READ: Get all users -> users currently = 
+// READ Route: Get all users -> users currently = 
 // username: club name
 // email: club leader's email
 // for context of our actual app
@@ -50,7 +50,7 @@ app.get("/users", (req, res) => {
   });
 });
 
-// WRITE: Add a new user
+// WRITE Route: Add a new user
 app.post("/users", (req, res) => {
   const { username, email } = req.body;
 
