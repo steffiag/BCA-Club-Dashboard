@@ -1,12 +1,11 @@
 import express from "express";
 import mysql from "mysql2";
 import cors from "cors";
-import dotenv from "dotenv";
 import setupAuth from "./auth.js";
 import { getFormResponses } from "./google-forms.js";
 import OpenAI from "openai";
+import "dotenv/config";
 
-dotenv.config();
 
 const app = express();
 const PORT = 4000;
@@ -56,6 +55,7 @@ app.post("/import-form-responses", async (req, res) => {
     }
 
     const insertPromises = responses.map((r) => {
+      console.log(r);
       const clubName = r.answers?.["44b6c6ef"]?.textAnswers?.answers[0]?.value || "N/A";
       const leaderEmail = r.answers?.["15bd187a"]?.textAnswers?.answers[0]?.value || "N/A";
 

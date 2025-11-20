@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import path from "path";
+import "dotenv/config";
 
 const keyFile = process.env.GOOGLE_CREDS_PATH;
 
@@ -19,3 +20,7 @@ export async function getFormResponses(formId) {
     return [];
   }
 }
+
+getFormResponses("1K2a3Akdr75XpojqzEyMLBP9IHx4fS6lMZYtRps-ngZo").then((responses) => {
+  console.log("Responses:", responses);
+});
