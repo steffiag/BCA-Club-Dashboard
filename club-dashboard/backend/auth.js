@@ -4,7 +4,6 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 export default function setupAuth(app) {
   app.use(session({ secret: "secret", resave: false, saveUninitialized: true }));
-
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -33,14 +32,13 @@ export default function setupAuth(app) {
   app.get("/auth/user", (req, res) => res.json(req.user || null));
 
   app.get("/auth/logout", (req, res) => {
-  req.logout(function (err) {
-    if (err) { return res.status(500).json({ error: "Logout failed" }); }
+    req.logout(function (err) {
+      if (err) return res.status(500).json({ error: "Logout failed" });
 
-    req.session.destroy(() => {
-      res.clearCookie("connect.sid");
-      res.json({ message: "Logged out" });
+      req.session.destroy(() => {
+        res.clearCookie("connect.sid");
+        res.json({ message: "Logged out" });
+      });
     });
   });
-});
-
 }
