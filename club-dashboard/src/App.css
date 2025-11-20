@@ -158,3 +158,63 @@ body, html {
 .auth{
   margin: 15px;
 }
+
+.compare-card {
+  background: #f0f2f5;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+  transition: 0.2s;
+}
+
+.compare-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.compare-input {
+  width: 80%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #dcdde1;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.2s;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.compare-input:focus {
+  border-color: #487eb0;
+  box-shadow: 0 0 6px rgba(72, 126, 176, 0.2);
+}
+
+.btn-compare {
+  margin-top: 15px;
+  background: #487eb0;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: 0.2s;
+}
+
+.btn-compare:hover {
+  background: #40739e;
+  transform: scale(1.03);
+}
+
+.similarity-score {
+  margin-top: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2f3640;
+  text-align: center;
+}

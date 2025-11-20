@@ -4,14 +4,21 @@ import cors from "cors";
 import dotenv from "dotenv";
 import setupAuth from "./auth.js";
 import { getFormResponses } from "./google-forms.js";
+import OpenAI from "openai";
 
 dotenv.config();
+
 const app = express();
 const PORT = 4000;
 
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.urlencoded({ extended: true }));
 
 const db = mysql.createConnection({
   host: "127.0.0.1",
@@ -39,23 +46,18 @@ app.get("/form-responses", async (req, res) => {
 });
 
 app.post("/import-form-responses", async (req, res) => {
-  console.log("Import route hit!");
-
   const formId = "1K2a3Akdr75XpojqzEyMLBP9IHx4fS6lMZYtRps-ngZo";
 
   try {
     const responses = await getFormResponses(formId);
-    console.log(responses);
 
     if (!responses.length) {
       return res.status(200).json({ message: "No responses to import" });
     }
 
     const insertPromises = responses.map((r) => {
-      const clubName =
-    r.answers?.["44b6c6ef"]?.textAnswers?.answers[0]?.value || "N/A";
-  const leaderEmail =
-    r.answers?.["15bd187a"]?.textAnswers?.answers[0]?.value || "N/A";
+      const clubName = r.answers?.["44b6c6ef"]?.textAnswers?.answers[0]?.value || "N/A";
+      const leaderEmail = r.answers?.["15bd187a"]?.textAnswers?.answers[0]?.value || "N/A";
 
       return new Promise((resolve, reject) => {
         const sql = "INSERT INTO proposed_clubs (club_name, leader_email) VALUES (?, ?)";
@@ -67,7 +69,6 @@ app.post("/import-form-responses", async (req, res) => {
     });
 
     await Promise.all(insertPromises);
-
     res.status(201).json({ message: "Proposed clubs imported!" });
   } catch (err) {
     console.error("Failed to import form responses:", err);
@@ -75,7 +76,6 @@ app.post("/import-form-responses", async (req, res) => {
   }
 });
 
-// USERS TABLE ROUTES
 app.get("/users", (req, res) => {
   const sql = "SELECT * FROM users";
   db.query(sql, (err, results) => {
@@ -86,7 +86,6 @@ app.get("/users", (req, res) => {
 
 app.post("/users", (req, res) => {
   const { username, email } = req.body;
-
   const sql = "INSERT INTO users (username, email) VALUES (?, ?)";
   db.query(sql, [username, email], (err, result) => {
     if (err) return res.status(500).json({ error: "Failed to add user" });
@@ -102,7 +101,6 @@ app.delete("/users/:id", (req, res) => {
   });
 });
 
-
 app.get("/proposed-clubs", (req, res) => {
   const sql = "SELECT * FROM proposed_clubs";
   db.query(sql, (err, results) => {
@@ -111,7 +109,6 @@ app.get("/proposed-clubs", (req, res) => {
   });
 });
 
-// Delete a proposed club by ID
 app.delete("/proposed-clubs/:id", (req, res) => {
   const { id } = req.params;
   const sql = "DELETE FROM proposed_clubs WHERE id = ?";
@@ -127,6 +124,28 @@ app.delete("/proposed-clubs/:id", (req, res) => {
   });
 });
 
+
+app.post("/compare-clubs", async (req, res) => {
+  const { club1, club2 } = req.body;
+  if (!club1 || !club2) {
+    return res.status(400).json({ error: "Both club names are required" });
+  }
+  try {
+    const prompt = `On a scale from 0 to 100, rate how similar these two club names are: "${club1}" and "${club2}". Respond with just the number.`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0,
+    });
+
+    const score = completion.choices[0].message.content.trim();
+    res.json({ score });
+  } catch (err) {
+    console.error("OpenAI API error:", err);
+    res.status(500).json({ error: "Failed to get similarity score" });
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("BCA Club Dashboard backend is running!");
