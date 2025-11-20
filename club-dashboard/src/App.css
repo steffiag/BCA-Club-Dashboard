@@ -154,3 +154,7 @@ body, html {
   background: #c23616;
   transform: scale(1.1);
 }
+
+.auth{
+  margin: 15px;
+}

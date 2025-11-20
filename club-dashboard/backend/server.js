@@ -1,19 +1,23 @@
 // imports
-const express = require("express");
-const mysql = require("mysql2");
-const cors = require("cors");
+import express from "express";
+import mysql from "mysql2";
+import cors from "cors";
+import setupAuth from "./auth.js"; 
+import dotenv from "dotenv";
+dotenv.config();
+
 
 // app setup
 const app = express();
-app.use(cors());
-app.use(express.json()); // allows JSON body parsing
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(express.json()); 
 
 // --- MySQL Connection ---
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "appuser",          // ← MySQL username
-  password: "password123",  // ←  MySQL password (for this type of user - "appuser")
-  database: "my_app"        // ←  schema/database name 
+  host: "127.0.0.1",
+  user: "root",         
+  password: "",  
+  database: "bca-club-dashboard"
 });
 
 // testing MySQL connection
@@ -24,6 +28,8 @@ db.connect((err) => {
   }
   console.log("Connected to MySQL database!");
 });
+
+setupAuth(app);
 
 // --- ROUTES ---
 
