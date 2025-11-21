@@ -4,11 +4,11 @@ import dotenv from "dotenv";
 import setupAuth from "./auth.js";
 import { getFormResponses } from "./google-forms.js";
 import OpenAI from "openai";
+import db from "./models/index.js"; // Sequelize models
+import { requireAdmin } from "./auth.js"; // RBAC middleware
 
-// Load environment
 dotenv.config();
 
-// Initialize app
 const app = express();
 const PORT = 4000;
 
@@ -21,9 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 setupAuth(app);
 
 // OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // -------------------------
 // GOOGLE FORMS ROUTES
@@ -39,11 +37,20 @@ app.get("/form-responses", async (req, res) => {
   }
 });
 
-app.post("/import-form-responses", async (req, res) => {
+// Admin-only import of proposed clubs
+app.post("/import-form-responses", requireAdmin, async (req, res) => {
   const formId = "1K2a3Akdr75XpojqzEyMLBP9IHx4fS6lMZYtRps-ngZo";
   try {
     const responses = await getFormResponses(formId);
-    res.status(201).json({ message: `${responses.length} responses fetched!` });
+
+    const insertPromises = responses.map((r) => {
+      const clubName = r.answers?.["44b6c6ef"]?.textAnswers?.answers[0]?.value || "N/A";
+      const leaderEmail = r.answers?.["15bd187a"]?.textAnswers?.answers[0]?.value || "N/A";
+      return db.ProposedClub.create({ club_name: clubName, leader_email: leaderEmail });
+    });
+
+    await Promise.all(insertPromises);
+    res.status(201).json({ message: `${responses.length} proposed clubs imported!` });
   } catch (err) {
     console.error("Failed to import form responses:", err);
     res.status(500).json({ error: "Failed to import responses" });
@@ -73,11 +80,10 @@ app.post("/compare-clubs", async (req, res) => {
 });
 
 // -------------------------
-// SEQUELIZE ROUTES (isolated)
+// USERS ROUTES
 // -------------------------
-import db from "./models/index.js"; // Sequelize models
 
-// Users
+// Get all users (public read)
 app.get("/users", async (req, res) => {
   try {
     const users = await db.User.findAll();
@@ -88,7 +94,8 @@ app.get("/users", async (req, res) => {
   }
 });
 
-app.post("/users", async (req, res) => {
+// Admin-only create user
+app.post("/users", requireAdmin, async (req, res) => {
   try {
     const { username, email } = req.body;
     const user = await db.User.create({ username, email });
@@ -99,7 +106,8 @@ app.post("/users", async (req, res) => {
   }
 });
 
-app.delete("/users/:id", async (req, res) => {
+// Admin-only delete user
+app.delete("/users/:id", requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const deleted = await db.User.destroy({ where: { id } });
@@ -111,7 +119,11 @@ app.delete("/users/:id", async (req, res) => {
   }
 });
 
-// Proposed clubs
+// -------------------------
+// PROPOSED CLUBS ROUTES
+// -------------------------
+
+// Get all proposed clubs (public read)
 app.get("/proposed-clubs", async (req, res) => {
   try {
     const clubs = await db.ProposedClub.findAll();
@@ -122,7 +134,8 @@ app.get("/proposed-clubs", async (req, res) => {
   }
 });
 
-app.delete("/proposed-clubs/:id", async (req, res) => {
+// Admin-only delete proposed club
+app.delete("/proposed-clubs/:id", requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const deleted = await db.ProposedClub.destroy({ where: { id } });
@@ -134,7 +147,9 @@ app.delete("/proposed-clubs/:id", async (req, res) => {
   }
 });
 
-
+// -------------------------
+// HEALTHCHECK
+// -------------------------
 app.get("/", (req, res) => {
   res.send("BCA Club Dashboard backend is running!");
 });
