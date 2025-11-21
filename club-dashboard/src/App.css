@@ -218,3 +218,17 @@ body, html {
   color: #2f3640;
   text-align: center;
 }
+
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; 
+}
+
+.section-title {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}

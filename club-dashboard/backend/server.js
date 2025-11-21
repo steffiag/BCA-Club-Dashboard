@@ -83,10 +83,11 @@ app.post("/compare-clubs", async (req, res) => {
 // USERS ROUTES
 // -------------------------
 
-// Get all users (public read)
 app.get("/users", async (req, res) => {
   try {
-    const users = await db.User.findAll();
+    const users = await db.User.findAll({
+      where: { role: 'user' } 
+    });
     res.json(users);
   } catch (err) {
     console.error("Failed to fetch users:", err);
