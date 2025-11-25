@@ -1,5 +1,5 @@
 Product Form and Technology Stack:
-- The product will be a web application hosted on a PAAS, Vercel, with server-side rendering.
+- The finalized product will be deployed on a PAAS, Vercel, with server-side rendering.
 - HTML, CSS, Javascript
 - React
 - Node JS with Express: utilized in backend
