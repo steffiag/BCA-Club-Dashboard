@@ -32,7 +32,7 @@ app.get("/form-responses", async (req, res) => {
     const responses = await getFormResponses(formId);
     res.json(responses);
   } catch (err) {
-    console.error("Error fetching form responses:", err);
+    console.error("Error fetching the form responses:", err);
     res.status(500).json({ error: "Failed to fetch form responses" });
   }
 });
